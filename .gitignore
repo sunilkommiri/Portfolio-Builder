@@ -1,0 +1,78 @@
+# Node.js / General
+node_modules/
+npm-debug.log*
+yarn-error.log*
+*.log
+coverage/
+.env
+.env.*
+!.env.example # Make sure .env.example is NOT ignored if you have one
+
+# Frontend (React)
+frontend/build/
+frontend/node_modules/
+frontend/.DS_Store
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Backend
+backend/node_modules/
+backend/.DS_Store
+backend/dist/ # If you compile TypeScript and only commit src/
+# backend/.env # Already covered by global .env
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars # Typically sensitive, provide .tfvars.example if needed
+# !*.tfvars.example # If you have an example tfvars file
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl # Usually committed, but can be gitignored if all devs run `terraform init -upgrade`
+
+# IDE / OS specific
+.DS_Store
+Thumbs.db
+*.idea/
+.project
+.classpath
+.c9/ # AWS Cloud9
+*.launch
+.settings/
+*.sublime-workspace
+*.suo
+*.user
+*.sln.docstates
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/ शुटिङ # If there's a typo in a path, ensure it's corrected or handled. Assuming this was a typo.
+
+# AWS specific temporary files
+.aws/
+aws_temp/
+
+# Compiled output
+dist/
+build/
+out/
+target/
+
+# Secrets - general
+*.pem
+*.key
+*.cer
+*.p12
+*.pfx
+credentials.*
+secret.*
