@@ -1,0 +1,73 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile # Assuming your Dockerfile is for development, might need a separate one for prod.
+    ports:
+      - "3000:3000" # Expose React dev server
+    volumes:
+      - ./frontend:/app # Mount source code for hot reloading
+      - /app/node_modules # Anonymous volume to prevent host node_modules from overwriting container's
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true # May be needed for Docker volume hot reloading on some systems
+      - REACT_APP_API_URL=http://localhost:3001/api # Example API URL
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001" # Expose Node.js API
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - DB_HOST=db # Service name of the PostgreSQL container
+      - DB_USER=portfolioadmin
+      - DB_PASSWORD=yoursecurepassword # <<< CHANGE IN LOCAL ENV or use .env file
+      - DB_DATABASE=portfoliodb
+      - DB_PORT=5432
+      - JWT_SECRET=yourlocalsecretkeyforjwt # <<< CHANGE IN LOCAL ENV
+      - CORS_ORIGIN=http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy # Wait for DB to be ready
+    networks:
+      - app-network
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - "5433:5432" # Map host port 5433 to container port 5432 to avoid conflicts if local PG runs on 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist database data
+      # You can also mount an init script to create DB/user on first run if needed:
+      # - ./backend/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    environment:
+      - POSTGRES_USER=portfolioadmin
+      - POSTGRES_PASSWORD=yoursecurepassword # <<< Must match backend's DB_PASSWORD
+      - POSTGRES_DB=portfoliodb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolioadmin -d portfoliodb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  postgres_data: # Define the named volume
+
+networks:
+  app-network:
+    driver: bridge
