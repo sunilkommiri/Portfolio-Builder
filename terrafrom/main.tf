@@ -231,12 +231,12 @@ resource "aws_db_subnet_group" "default" {
 resource "aws_db_instance" "default" {
   allocated_storage      = 20 # GB (Min for General Purpose SSD)
   engine                 = "postgres"
-  engine_version         = "14.11" # Check for latest supported versions
+  engine_version         = "17.14" # Check for latest supported versions
   instance_class         = var.db_instance_class
   db_name                = "${replace(var.project_name, "-", "")}db" # Database name (no hyphens)
   username               = var.db_username
   password               = var.db_password
-  parameter_group_name   = "default.postgres14"
+  parameter_group_name   = "default.postgres17"
   db_subnet_group_name   = aws_db_subnet_group.default.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   skip_final_snapshot    = true # For dev/test; set to false for production & configure backups
@@ -406,7 +406,7 @@ resource "aws_lb" "main" {
 
 # Target Groups
 resource "aws_lb_target_group" "frontend" {
-  name        = "${var.project_name}-frontend-tg-${var.environment}"
+  name        = "${var.project_name}-fe-tg-${var.environment}"
   port        = var.frontend_container_port
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
@@ -425,7 +425,7 @@ resource "aws_lb_target_group" "frontend" {
 }
 
 resource "aws_lb_target_group" "backend" {
-  name        = "${var.project_name}-backend-tg-${var.environment}"
+  name        = "${var.project_name}-be-tg-${var.environment}"
   port        = var.backend_container_port
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
