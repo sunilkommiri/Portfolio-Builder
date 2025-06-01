@@ -4,7 +4,7 @@
 
 # terraform {
 #   backend "s3" {
-#     bucket         = "your-terraform-state-bucket-name-unique" # <<< REPLACE with your unique S3 bucket name
+#     bucket         = "portpofio" # <<< REPLACE with your unique S3 bucket name
 #     key            = "portfolio-app/terraform.tfstate"         # Path to state file in the bucket
 #     region         = "us-east-1"                               # <<< REPLACE with your S3 bucket region
 #     encrypt        = true                                      # Encrypt state file
