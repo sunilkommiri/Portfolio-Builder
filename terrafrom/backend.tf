@@ -8,7 +8,7 @@
 #     key            = "portfolio-app/terraform.tfstate"         # Path to state file in the bucket
 #     region         = "us-east-1"                               # <<< REPLACE with your S3 bucket region
 #     encrypt        = true                                      # Encrypt state file
-#     dynamodb_table = "your-terraform-state-lock-table"       # <<< REPLACE (Optional: for state locking)
+#     dynamodb_table = "protpolio-app"       # <<< REPLACE (Optional: for state locking)
 #   }
 # }
 
